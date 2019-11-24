@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Functions.Tests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "SQLConnectionStringClaimAuditDB": "https://claimkeyvault.vault.azure.net/secrets/SQLConnectionStringClaimAuditDB/facdd5a661814820aa3700eb083e21b3"
+      }
+    }
+  }
+}
