@@ -13,6 +13,7 @@ namespace ClaimManagement.Infrastructure.CosmosDB
     public class CosmosDbClaimDocumentService : ICosmosDbClaimDocumentService
     {
         private Container _container;
+        private readonly object nextIdLock = new object();
 
         public CosmosDbClaimDocumentService(
             CosmosClient dbClient,
@@ -24,15 +25,21 @@ namespace ClaimManagement.Infrastructure.CosmosDB
 
         public async Task AddItemAsync(ClaimDocument claimDocument)
         {
-            var query = "SELECT  * FROM Claims c order by c._ts desc";
-            var claims = await GetItemsAsync(query);
             var id = 1;
-            if (claims.Count() > 0)
+            lock (nextIdLock)
             {
-                id = Convert.ToInt32(claims.FirstOrDefault().Id) + 1;
+                var query = "SELECT  * FROM Claims c order by c._ts desc";
+                var claims = GetItemsAsync(query).GetAwaiter().GetResult();
+
+                if (claims.Count() > 0)
+                {
+                    id = Convert.ToInt32(claims.FirstOrDefault().Id) + 1;
+                }
             }
+
             claimDocument.Id = id.ToString();
             await this._container.CreateItemAsync<ClaimDocument>(claimDocument, new PartitionKey(claimDocument.Id));
+
         }
 
         public async Task DeleteItemAsync(string id)
