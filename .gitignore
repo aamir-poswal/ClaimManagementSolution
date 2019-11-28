@@ -30,3 +30,5 @@
 /InsuranceClaimHandler.API/appsettings.Development.json
 /FunctionAppClaimAudit/host.json
 /FunctionAppClaimAudit/local.settings.json
+/InsuranceClaimHandler.API/Properties/PublishProfiles/InsuranceClaimHandlerAPI20191123035338 - Web Deploy.pubxml
+/InsuranceClaimHandler.API/Properties/PublishProfiles/InsuranceClaimHandlerAPI20191123035338 - Web Deploy.pubxml.user

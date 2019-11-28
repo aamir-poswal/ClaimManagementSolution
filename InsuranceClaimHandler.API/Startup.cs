@@ -23,8 +23,7 @@ namespace InsuranceClaimHandler.WriteAPI
 {
     public class Startup
     {
-        private static string GetKeyVaultEndpoint() => "https://ClaimKeyVault.vault.azure.net/";
-
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,7 +41,7 @@ namespace InsuranceClaimHandler.WriteAPI
             });
 
             var builder = new ConfigurationBuilder();
-            var keyVaultEndpoint = GetKeyVaultEndpoint();
+            var keyVaultEndpoint = AzurekeyVaultConfigurationHelper.Url;
             if (!string.IsNullOrEmpty(keyVaultEndpoint))
             {
                 var azureServiceTokenProvider = new AzureServiceTokenProvider();
@@ -60,13 +59,10 @@ namespace InsuranceClaimHandler.WriteAPI
                 logging.AddConsole();
             }).Configure<LoggerFilterOptions>(options => options.MinLevel =
                                               LogLevel.Information);
-            
-            var cosmosDbAccount = configurationRoot["CosmosDbAccount"];
-            var cosmosDbKey = configurationRoot["CosmosDbKey"];
-            var cosmosDbDatabaseName = configurationRoot["CosmosDbDatabaseName"];
-            var cosmosDbContainerName = configurationRoot["CosmosDbContainerName"];
 
-            services.AddSingleton<ICosmosDbClaimDocumentService>(CosmosDBContext.InitializeCosmosClientInstanceAsync(cosmosDbAccount, cosmosDbKey, cosmosDbDatabaseName, cosmosDbContainerName).GetAwaiter().GetResult());
+            var cosmosDBConfiguration = CosmosDBConfigurationHelper.LoadCosmosDBConfiguration(configurationRoot);
+
+            services.AddSingleton<ICosmosDbClaimDocumentService>(CosmosDBContext.InitializeCosmosClientInstanceAsync(cosmosDBConfiguration.CosmosDbAccount, cosmosDBConfiguration.CosmosDbKey, cosmosDBConfiguration.CosmosDbDatabaseName, cosmosDBConfiguration.CosmosDbContainerName).GetAwaiter().GetResult());
 
             services.AddSingleton<IConfiguration>(configurationRoot);
 
