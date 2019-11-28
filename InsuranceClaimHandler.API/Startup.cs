@@ -118,6 +118,8 @@ namespace InsuranceClaimHandler.WriteAPI
             option.AddRedirect("^$", "swagger");
             app.UseRewriter(option);
 
+            app.UseMiddleware<CustomExceptionHandlerMiddleware>();
+
             app.UseMvc();
         }
     }

@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace InsuranceClaimHandler.WriteAPI.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class ClaimController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ClaimController> _logger;
-        
+
         public ClaimController(IMediator mediator, ILogger<ClaimController> logger)
         {
             _mediator = mediator;
@@ -30,16 +30,8 @@ namespace InsuranceClaimHandler.WriteAPI.Controllers
         [Route("add")]
         public async Task<IActionResult> Add(AddClaimCommand command)
         {
-            try
-            {
-                await _mediator.Send(command);
-                return Ok();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError, "There is something wrong, try again in few moments, or contact our support team.");
-            }
+            await _mediator.Send(command);
+            return Ok();
         }
 
         [Microsoft.AspNetCore.Cors.EnableCors("ClaimApiAccessPolicy")]
@@ -47,15 +39,7 @@ namespace InsuranceClaimHandler.WriteAPI.Controllers
         [Route("all")]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                return Ok(await _mediator.Send(new GetClaimsQuery()));
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError, "There is something wrong, try again in few moments, or contact our support team.");
-            }
+            return Ok(await _mediator.Send(new GetClaimsQuery()));
         }
 
         [Microsoft.AspNetCore.Cors.EnableCors("ClaimApiAccessPolicy")]
@@ -63,21 +47,10 @@ namespace InsuranceClaimHandler.WriteAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var getClaimByIdQuery = new GetClaimByIdQuery() { Id = id.ToString() };
-                return this.Ok(await _mediator.Send(getClaimByIdQuery));
-            }
-            catch (NotFoundException notFoundException)
-            {
-                _logger.LogError(notFoundException.ToString());
-                return StatusCode(StatusCodes.Status404NotFound, notFoundException.Message);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError, "There is something wrong, try again in few moments, or contact our support team.");
-            }
+
+            var getClaimByIdQuery = new GetClaimByIdQuery() { Id = id.ToString() };
+            return this.Ok(await _mediator.Send(getClaimByIdQuery));
+
         }
 
         [Microsoft.AspNetCore.Cors.EnableCors("ClaimApiAccessPolicy")]
@@ -85,24 +58,13 @@ namespace InsuranceClaimHandler.WriteAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Remove(int id)
         {
-            try
-            {
-                var deleteCommand = new DeleteClaimCommand() { Id = id.ToString() };
 
-                await _mediator.Send(deleteCommand);
+            var deleteCommand = new DeleteClaimCommand() { Id = id.ToString() };
 
-                return Ok(true);
-            }
-            catch (NotFoundException notFoundException)
-            {
-                _logger.LogError(notFoundException.ToString());
-                return StatusCode(StatusCodes.Status404NotFound, notFoundException.Message);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception.ToString());
-                return StatusCode(StatusCodes.Status500InternalServerError, "There is something wrong, try again in few moments, or contact our support team.");
-            }
+            await _mediator.Send(deleteCommand);
+
+            return Ok(true);
+
         }
 
         [Microsoft.AspNetCore.Cors.EnableCors("ClaimApiAccessPolicy")]
@@ -110,15 +72,9 @@ namespace InsuranceClaimHandler.WriteAPI.Controllers
         [Route("types")]
         public IActionResult GetClaimTypes()
         {
-            try
-            {
-                return Ok(EnumHelper.GetClaimTypeEnumReadableValues());
-            }
-            catch (NotFoundException notFoundException)
-            {
-                _logger.LogError(notFoundException.ToString());
-                return StatusCode(StatusCodes.Status404NotFound, notFoundException.Message);
-            }
+
+            return Ok(EnumHelper.GetClaimTypeEnumReadableValues());
+
         }
 
     }
