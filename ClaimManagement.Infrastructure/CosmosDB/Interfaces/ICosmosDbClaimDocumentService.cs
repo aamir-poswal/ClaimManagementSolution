@@ -10,7 +10,7 @@ namespace ClaimManagement.Infrastructure.CosmosDB
     {
         Task<IEnumerable<ClaimDocument>> GetItemsAsync(string query);
         Task<ClaimDocument> GetItemAsync(string id);
-        Task AddItemAsync(ClaimDocument claimDocument);
+        void AddItem(ClaimDocument claimDocument);
         Task UpdateItemAsync(string id, ClaimDocument claimDocument);
         Task DeleteItemAsync(string id);
     }

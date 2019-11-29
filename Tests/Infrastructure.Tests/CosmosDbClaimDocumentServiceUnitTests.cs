@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace ClaimManagement.Infrastructure.Tests
             claimDocument.Type = ClaimType.BadWeather.GetDescription();
             claimDocument.CreatedAt = DateTime.UtcNow;
 
-            await service.AddItemAsync(claimDocument);
+            service.AddItem(claimDocument);
 
             Assert.AreEqual(claimDocument.Year, 2017);
 

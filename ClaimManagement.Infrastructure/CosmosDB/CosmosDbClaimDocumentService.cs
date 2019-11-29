@@ -23,7 +23,7 @@ namespace ClaimManagement.Infrastructure.CosmosDB
             this._container = dbClient.GetContainer(databaseName, containerName);
         }
 
-        public async Task AddItemAsync(ClaimDocument claimDocument)
+        public void AddItem(ClaimDocument claimDocument)
         {
             var id = 1;
             lock (nextIdLock)
@@ -35,10 +35,12 @@ namespace ClaimManagement.Infrastructure.CosmosDB
                 {
                     id = Convert.ToInt32(claims.FirstOrDefault().Id) + 1;
                 }
+
+                claimDocument.Id = id.ToString();
+                this._container.CreateItemAsync<ClaimDocument>(claimDocument, new PartitionKey(claimDocument.Id)).GetAwaiter().GetResult();
+
             }
 
-            claimDocument.Id = id.ToString();
-            await this._container.CreateItemAsync<ClaimDocument>(claimDocument, new PartitionKey(claimDocument.Id));
 
         }
 

@@ -58,7 +58,7 @@ namespace ClaimManagement.Application.Claims.Commands
             claimDocument.Type = request.Type.GetDescription();
             claimDocument.CreatedAt = DateTime.UtcNow;
 
-            await _cosmosDbClaimDocumentService.AddItemAsync(claimDocument);
+            _cosmosDbClaimDocumentService.AddItem(claimDocument);
             var claimChangeNotification = new ClaimChangeEventNotification()
             {
 
