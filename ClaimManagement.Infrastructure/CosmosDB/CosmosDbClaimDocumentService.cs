@@ -1,12 +1,9 @@
 ﻿using ClaimManagement.Domain.Entities.CosmosDocument;
-using ClaimManagement.Infrastructure.CosmosDB;
+using Microsoft.Azure.Cosmos;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Azure.Cosmos;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace ClaimManagement.Infrastructure.CosmosDB
 {

@@ -1,18 +1,26 @@
-﻿using ClaimManagement.Infrastructure.CosmosDB;
-using ClaimManagement.Infrastructure.CosmosDB.Persistence;
-using Microsoft.Azure.KeyVault;
+﻿using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureKeyVault;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClaimManagement.Infrastructure.Tests
 {
-    public static class TestHelper
+    public static class CosmosDBConfigurationTestHelper
     {
+
+        public static string CosmosDbAccount { get; set; }
+        public static string CosmosDbKey { get; set; }
+        public static string CosmosDbDatabaseName { get; set; }
+        public static string CosmosDbContainerName { get; set; }
+
+        static CosmosDBConfigurationTestHelper()
+        {
+            LoadCosmosDBConfiguration();
+        }
         private static string GetKeyVaultEndpoint() => "https://ClaimKeyVault.vault.azure.net/";
         private static IConfiguration GetConfiguration()
         {
@@ -32,16 +40,17 @@ namespace ClaimManagement.Infrastructure.Tests
             return configurationRoot;
         }
 
-        public static async Task<CosmosDbClaimDocumentService> GetCosmosDbClaimDocumentService()
+        private static void LoadCosmosDBConfiguration()
         {
-            var configurationRoot = GetConfiguration();
-            var cosmosDbAccount = configurationRoot["CosmosDbAccount"];
-            var cosmosDbKey = configurationRoot["CosmosDbKey"];
-            var cosmosDbDatabaseName = configurationRoot["CosmosDbDatabaseName"];
-            var cosmosDbContainerName = configurationRoot["CosmosDbContainerName"];
-            var service = await CosmosDBContext.InitializeCosmosClientInstanceAsync(cosmosDbAccount, cosmosDbKey, cosmosDbDatabaseName, cosmosDbContainerName);
-            return service;
+            IConfiguration configuration = GetConfiguration();
+
+            CosmosDbAccount = configuration["CosmosDbAccount"];
+            CosmosDbKey = configuration["CosmosDbKey"];
+            CosmosDbDatabaseName = configuration["CosmosDbDatabaseName"];
+            CosmosDbContainerName = configuration["CosmosDbContainerName"];
+
         }
 
     }
+
 }

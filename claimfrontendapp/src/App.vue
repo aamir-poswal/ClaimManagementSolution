@@ -8,11 +8,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-img
-            src="https://www.instech.no/wp-content/themes/maksimer/images/logo.png"
-            fluid
-            alt="Responsive image"
-          ></b-img>
+          <img alt="Vue logo" src />
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
